@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "即梦图片下载",
+  "version": "1.0.0",
+  "description": "在即梦页面中一键下载目标图片，自动转换为 JPG 并按网页标题归档。",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite",
+    "downloads"
+  ],
+  "host_permissions": [
+    "https://jimeng.jianying.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://jimeng.jianying.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Extract image src",
+    "default_popup": "popup.html"
+  }
+}
