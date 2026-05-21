@@ -189,7 +189,7 @@ try {
 
   Write-Step "正在使用 Git：$gitExe"
   Write-Step "正在检查仓库状态..."
-  & $gitExe -C $resolvedDestination rev-parse --is-inside-work-tree
+  & $gitExe -C $resolvedDestination rev-parse --is-inside-work-tree > $null
   if ($LASTEXITCODE -ne 0) {
     throw "当前目录不是有效的 Git 仓库。"
   }
@@ -213,10 +213,28 @@ try {
     throw "无法把远端 $RemoteName 设置为 HTTPS 地址。"
   }
 
-  Write-Step "正在拉取最新版本..."
-  & $gitExe -C $resolvedDestination pull --ff-only $RemoteName $Branch
+  Write-Step "正在获取最新版本..."
+  & $gitExe -C $resolvedDestination fetch --prune $RemoteName $Branch
   if ($LASTEXITCODE -ne 0) {
-    throw "git pull 执行失败。"
+    throw "git fetch 执行失败。"
+  }
+
+  Write-Step "正在丢弃本地改动..."
+  & $gitExe -C $resolvedDestination reset --hard HEAD
+  if ($LASTEXITCODE -ne 0) {
+    throw "git reset --hard HEAD 执行失败。"
+  }
+
+  Write-Step "正在清理本地临时文件..."
+  & $gitExe -C $resolvedDestination clean -fd
+  if ($LASTEXITCODE -ne 0) {
+    throw "git clean 执行失败。"
+  }
+
+  Write-Step "正在切换到最新版本..."
+  & $gitExe -C $resolvedDestination reset --hard FETCH_HEAD
+  if ($LASTEXITCODE -ne 0) {
+    throw "git reset --hard FETCH_HEAD 执行失败。"
   }
 
   Write-Step "正在清理已删除的旧文件..."
