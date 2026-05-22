@@ -1,4 +1,4 @@
-# Jimeng Image Downloader update script for Windows plugin installs.
+﻿# Jimeng Image Downloader update script for Windows plugin installs.
 param(
   [string]$RepositoryUrl = "https://gitee.com/zui216/jimeng-image-downloader.git",
   [string]$RemoteName = "gitee",
@@ -246,7 +246,7 @@ try {
 
   Write-Step "更新完成。"
   Write-Host ""
-  Write-Host "更新完成。请回到 Chrome 扩展页面点一次“重新加载”。"
+  Write-Host '更新完成。请回到 Chrome 扩展页面点一次"重新加载"。'
   if (-not [string]::IsNullOrWhiteSpace($SuccessFlagPath)) {
     Set-Content -LiteralPath $SuccessFlagPath -Value "ok" -Encoding ASCII
   }
